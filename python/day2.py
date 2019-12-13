@@ -9,24 +9,22 @@ with open('input/day2.txt') as f:
 ### solver ###
 
 def solve_a():
-    code[1:3] = 12, 2
     ic = IntCode(code)
+    ic[1:3] = 12, 2
     ic.run()
     print(ic.dump())
-    return ic.dump()[0]
+    return ic[0]
 
 
 def solve_b():
     for noun in range(0, 100):
         for verb in range(0, 100):
-            code[1:3] = noun, verb
             ic = IntCode(code)
+            ic[1:3] = noun, verb
             ic.run()
-            dump = ic.dump()
-            result = dump[0]
-            print(ic.dump())
-            print("noun:", noun, "verb:", verb, "result:", result)
-            if result == 19690720:
+            #print("noun:", noun, "verb:", verb)
+            #print(ic.dump())
+            if ic[0] == 19690720:
                 return 100 * noun + verb
 
 

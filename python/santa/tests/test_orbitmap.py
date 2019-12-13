@@ -2,7 +2,7 @@ from santa.orbitmap import OrbitMap
 
 def test_checksum():
     orbits = ["COM)B", "B)C", "C)D", "D)E", "E)F", "B)G", "G)H", "D)I", "E)J", "J)K", "K)L"]
-    uom = OrbitMap(orbits)
+    uom = OrbitMap("COM", orbits)
     assert uom.ok()
     assert uom.checksum() == 42
         
@@ -15,7 +15,7 @@ def test_transits():
           (["COM)B", "B)C", "C)D", "D)E", "E)F", "B)G", "G)H", "D)I", "E)J", "J)K", "K)L", "K)YOU", "I)SAN"], 4)]
     for orbits, transfers in ex:
         print(orbits)
-        uom = OrbitMap(orbits)
+        uom = OrbitMap("COM", orbits)
         assert uom.ok()
         assert uom.transfers(uom.center("YOU"), uom.center("SAN")) == transfers
         

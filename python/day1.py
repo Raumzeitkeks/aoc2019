@@ -25,18 +25,16 @@ def indirect_fuel(mass):
 def solve_a():
     fuel = [direct_fuel(m) for m in masses]
     total = sum(fuel)
-    for m, f in zip(masses, fuel):
-        print("mass:", m, " direct fuel:", f)
-    print("total direct fuel:", total)
+    print(list(zip(masses, fuel)))
+    print("total:", total)
     return total
 
 
 def solve_b():
     fuel = [indirect_fuel(m) for m in masses]
     total = sum(fuel)
-    for m, f in zip(masses, fuel):
-        print("mass:", m, " indirect fuel:", f)
-    print("total indirect fuel:", total)
+    print(list(zip(masses, fuel)))
+    print("total:", total)
     return total
 
 

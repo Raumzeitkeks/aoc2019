@@ -29,11 +29,15 @@ def valid_b(x):
 ### solver ###
 
 def solve_a():
-    return sum(1 for x in range(x_min, x_max) if valid_a(x))
+    pwlist = [x for x in range(x_min, x_max) if valid_a(x)]
+    print(pwlist)
+    return len(pwlist)
 
 
 def solve_b():
-    return sum(1 for x in range(x_min, x_max) if valid_b(x))
+    pwlist = [x for x in range(x_min, x_max) if valid_b(x)]
+    print(pwlist)
+    return len(pwlist)
 
 
 ### tests ###

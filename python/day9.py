@@ -2,25 +2,23 @@ from santa.intcode import IntCode
 
 ### input ###
 
-with open('input/day5.txt') as f:
+with open('input/day9.txt') as f:
     code = [int(x) for x in f.readline().strip().split(",")]
 
 
 ### solver ###
 
 def solve_a():
-    input = [1]
     output = []
-    ic = IntCode(code, input.pop, output.append)
+    ic = IntCode(code, lambda: 1, output.append)
     ic.run()
     print(output)
     return output[-1]
 
 
 def solve_b():
-    input = [5]
     output = []
-    ic = IntCode(code, input.pop, output.append)
+    ic = IntCode(code, lambda: 2, output.append)
     ic.run()
     print(output)
     return output[-1]
@@ -29,8 +27,8 @@ def solve_b():
 ### tests ###
 
 def test_solution():
-    assert solve_a() == 15314507
-    assert solve_b() == 652726
+    assert solve_a() == 2671328082
+    assert solve_b() == 59095
 
 
 ### main ###

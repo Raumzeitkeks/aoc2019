@@ -1,11 +1,12 @@
 from collections import defaultdict
 
 class OrbitMap:
-    def __init__(self, orbits=[]):
+    def __init__(self, com, orbits=[]):
+        self._com = com
         self._fwd = defaultdict(set)
         self._bwd = dict()
         self.add_orbits(orbits)
-        
+    
     def add_orbit(self, orbit, *args):
         if args:
             self.add_orbit([orbit, *args])
@@ -32,7 +33,7 @@ class OrbitMap:
     
     def ok(self):
         seen = set()
-        todo = {"COM"}
+        todo = {self._com}
         while todo:
             obj = todo.pop()
             if obj in seen:
@@ -44,7 +45,7 @@ class OrbitMap:
     
     def checksum(self):
         checksum = 0
-        todo = set(["COM"])
+        todo = set([self._com])
         distance = 0
         while todo:
             checksum += distance * len(todo)
@@ -57,7 +58,7 @@ class OrbitMap:
     
     def com_path(self, obj):
         path = [obj]
-        while obj != "COM":
+        while obj != self._com:
             obj = self.center(obj)
             path.append(obj)
         return list(reversed(path))

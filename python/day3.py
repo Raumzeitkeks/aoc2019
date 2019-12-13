@@ -23,7 +23,8 @@ def solve_b():
     wire_b = Wire(wire_descr_b)
     intersections = wire_a.intersect(wire_b)
     print(intersections)
-    min_walk = min(len(wire_a.walk(coord)) + len(wire_b.walk(coord)) - 2 for coord in intersections)
+    min_walk = min(len(wire_a.walk(coord)) + len(wire_b.walk(coord)) - 2 
+                   for coord in intersections)
     return min_walk
 
 

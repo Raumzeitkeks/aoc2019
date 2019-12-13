@@ -9,12 +9,12 @@ with open('input/day6.txt') as f:
 ### solver ###
 
 def solve_a():
-    uom = OrbitMap(orbits)
+    uom = OrbitMap("COM", orbits)
     return uom.checksum()
 
 
 def solve_b():
-    uom = OrbitMap(orbits)
+    uom = OrbitMap("COM", orbits)
     return uom.transfers(uom.center("YOU"), uom.center("SAN"))
 
 
