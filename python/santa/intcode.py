@@ -1,15 +1,30 @@
+from collections import deque
 
 
 class IntCode:
-    class HLT(Exception):
+    class Halt(Exception):
         pass
     
-    def __init__(self, code, input=None, output=None):
+    class NeedsMoreInput(Exception):
+        pass
+    
+    class HasNoOutput(Exception):
+        pass
+    
+    def __init__(self, code, input=[]):
         self._mem = list(code)
         self._ip = 0
         self._rb = 0
-        self._in = input
-        self._out = output
+        self._in = deque(input)
+        self._out = deque()
+    
+    def copy(self):
+        ic = IntCode(self._mem)
+        ic._ip = self._ip
+        ic._rb = self._rb
+        ic._in = self._in.copy()
+        ic._out = self._out.copy()
+        return ic
     
     def __getitem__(self, key):
         try:
@@ -28,13 +43,25 @@ class IntCode:
         return self._mem.copy()
     
     def halted(self):
-        return self[self._ip] == 99
-        
-    def run(self):
+        return self[self._ip] % 100 == 99
+    
+    def push(self, value):
+        self._in.append(value)
+    
+    def pop(self):
         try:
-            while True:
+            return self._out.popleft()
+        except IndexError:
+            raise self.HasNoOutput()
+    
+    def output(self):
+        return list(self._out)
+    
+    def run(self, output_limit=None):
+        try:
+            while not output_limit or len(self._out) < output_limit:
                 self.step()
-        except self.HLT:
+        except self.Halt:
             pass
     
     def step(self):
@@ -80,12 +107,17 @@ class IntCode:
         self._ip += 4
         
     def _get(self, dst_ptr):
-        self[dst_ptr] = self._in()
-        self._ip += 2
+        try:
+            v = self._in.popleft()
+        except IndexError:
+            raise self.NeedsMoreInput()
+        else:
+            self[dst_ptr] = v
+            self._ip += 2
         
     def _put(self, v_ptr):
         v = self[v_ptr]
-        self._out(v)
+        self._out.append(v)
         self._ip += 2
         
     def _jnz(self, v_ptr, jmp_addr_ptr):
@@ -112,12 +144,4 @@ class IntCode:
         self._ip += 2
         
     def _hlt(self):
-        raise self.HLT()
-
-
-class Memory:
-    def __init__(self, data=[]):
-        assert all(isinstance(x, int) for x in data)
-        self._data = list(data)
-    
-        
+        raise self.Halt()

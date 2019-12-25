@@ -10,20 +10,18 @@ with open('input/day5.txt') as f:
 
 def solve_a():
     input = [1]
-    output = []
-    ic = IntCode(code, input.pop, output.append)
+    ic = IntCode(code, input)
     ic.run()
-    print(output)
-    return output[-1]
+    print(ic.output())
+    return ic.output()[-1]
 
 
 def solve_b():
     input = [5]
-    output = []
-    ic = IntCode(code, input.pop, output.append)
+    ic = IntCode(code, input)
     ic.run()
-    print(output)
-    return output[-1]
+    print(ic.output())
+    return ic.output()[-1]
 
 
 ### tests ###

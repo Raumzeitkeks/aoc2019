@@ -27,15 +27,13 @@ def test_output():
     for code, in_out in ex:
         for input, exp_out in in_out:
             print("code:", code, "input:", input)
-            output = []
-            ic = IntCode(code, lambda: input, output.append)
+            ic = IntCode(code, [input])
             ic.run()
             print("dump:", ic.dump())
-            assert output == [exp_out]
+            assert ic.output() == [exp_out]
 
 def test_quine():
     quine = [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
-    output = []
-    ic = IntCode(quine, None, output.append)
+    ic = IntCode(quine)
     ic.run()
-    assert output == quine
+    assert ic.output() == quine

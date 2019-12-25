@@ -9,19 +9,19 @@ with open('input/day9.txt') as f:
 ### solver ###
 
 def solve_a():
-    output = []
-    ic = IntCode(code, lambda: 1, output.append)
+    input = [1]
+    ic = IntCode(code, input)
     ic.run()
-    print(output)
-    return output[-1]
+    print(ic.output())
+    return ic.output()[-1]
 
 
 def solve_b():
-    output = []
-    ic = IntCode(code, lambda: 2, output.append)
+    input = [2]
+    ic = IntCode(code, input)
     ic.run()
-    print(output)
-    return output[-1]
+    print(ic.output())
+    return ic.output()[-1]
 
 
 ### tests ###
