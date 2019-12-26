@@ -10,15 +10,14 @@ with open('input/day7.txt') as f:
 ### helper ###
 
 def amplify(ics, input):
-    signal = input
-    for ic in itt.cycle(ics):
-        ic.push(signal)
-        ic.run(1)
-        try:
+    try:
+        signal = input
+        for ic in itt.cycle(ics):
+            ic.push(signal)
+            ic.run(output=1, fail=(IntCode.Halt))
             signal = ic.pop()
-        except ic.HasNoOutput:
-            break
-    return signal
+    except IntCode.Halt:
+        return signal
 
 
 def maximize(amp_code, phases):
@@ -28,7 +27,7 @@ def maximize(amp_code, phases):
         ics = [IntCode(amp_code, [phase]) for phase in seq]
         thrust = amplify(ics, 0)
         if thrust > max_thrust:
-            max_seq = seq
+            max_seq = list(seq)
             max_thrust = thrust
     return max_seq, max_thrust
 
@@ -56,7 +55,7 @@ def test_examples():
     for phases, amp_code, opt_seq, max_thrust in ex:
         seq, thrust = maximize(amp_code, phases)
         print(amp_code)
-        assert list(seq) == opt_seq
+        assert seq == opt_seq
         assert thrust == max_thrust
 
 

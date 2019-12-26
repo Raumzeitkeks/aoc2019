@@ -5,10 +5,16 @@ class IntCode:
     class Halt(Exception):
         pass
     
-    class NeedsMoreInput(Exception):
+    class NotEnoughInput(Exception):
         pass
     
-    class HasNoOutput(Exception):
+    class NotEnoughOutput(Exception):
+        pass
+    
+    class EnoughOutput(Exception):
+        pass
+    
+    class TooMuchOutput(Exception):
         pass
     
     def __init__(self, code, input=[]):
@@ -48,21 +54,44 @@ class IntCode:
     def push(self, value):
         self._in.append(value)
     
-    def pop(self):
-        try:
-            return self._out.popleft()
-        except IndexError:
-            raise self.HasNoOutput()
+    def pop(self, n=None):
+        if n is None:
+            if not self._out:
+                raise self.NotEnoughOutput()
+            else:
+                return self._out.popleft()
+        else:
+            if len(self._out) < n:
+                raise self.NotEnoughOutput()
+            else:
+                return [self._out.popleft() for _ in range(n)]
     
     def output(self):
         return list(self._out)
     
-    def run(self, output_limit=None):
-        try:
-            while not output_limit or len(self._out) < output_limit:
+    def run(self, *_, fail=(), stop=(), ignore=(), output=None, ascii=False):
+        while True:
+            try:
+                if output is not None:
+                    if len(self._out) == output:
+                        raise self.EnoughOutput()
+                    elif len(self._out) > output:
+                        raise self.TooMuchOutput()
                 self.step()
-        except self.Halt:
-            pass
+            except self.NotEnoughInput:
+                raise
+            except fail:
+                raise
+            except stop:
+                return
+            except self.Halt:
+                return
+            except ignore:
+                continue
+            except self.EnoughOutput:
+                return
+            except self.TooMuchOutput:
+                raise
     
     def step(self):
         m, ip, rb = self._mem, self._ip, self._rb
@@ -108,9 +137,9 @@ class IntCode:
         
     def _get(self, dst_ptr):
         try:
-            v = self._in.popleft()
+            v = int(self._in.popleft())
         except IndexError:
-            raise self.NeedsMoreInput()
+            raise self.NotEnoughInput()
         else:
             self[dst_ptr] = v
             self._ip += 2
